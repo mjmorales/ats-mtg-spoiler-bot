@@ -1,0 +1,1 @@
+# ats-mtg-spoiler-bot
