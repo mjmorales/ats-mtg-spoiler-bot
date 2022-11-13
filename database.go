@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -23,16 +24,15 @@ type DBConfig struct {
 
 // checks if the card URL already exists in the database
 func CheckCardExists(db *sql.DB, url string) bool {
-	var count int
+	var id int
 
-	row := db.QueryRow("SELECT COUNT(*) FROM scraped_cards WHERE url = $1", url)
-	err := row.Scan(&count)
+	row := db.QueryRow("SELECT id FROM scraped_cards WHERE url = $1 LIMIT 1", url)
+	err := row.Scan(&id)
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return count > 0
+	// db.QueryRow returns ErrNoRows if there are no rows
+	// in the result set so we can use that to check if
+	// the card already exists
+	return err == nil
 }
 
 // inserts a card record into the database
@@ -49,4 +49,25 @@ func InitializeDB(db *sql.DB) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// connect to the database
+func ConnectDB(config Config) *sql.DB {
+	dbConfig := config.DB
+	connStr := fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		dbConfig.DatabaseUser,
+		dbConfig.DatabasePassword,
+		dbConfig.DatabaseHost,
+		dbConfig.DatabasePort,
+		dbConfig.Database,
+		dbConfig.DatabaseSslmode,
+	)
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return db
 }
