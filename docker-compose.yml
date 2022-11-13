@@ -1,0 +1,17 @@
+version: '3'
+services:
+  mtg-spoiler-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mtg-spoiler-scraper
+    restart: always
+    command:
+      - /mtg-spoiler-scraper
+      - -interval=${INTERVAL}
+      - -database=${DATABASE}
+      - -database-user=${DATABASE_USER}
+      - -database-password=${DATABASE_PASSWORD}
+      - -database-host=${DATABASE_HOST}
+      - -database-port=${DATABASE_PORT}
+      - -database-sslmode=${DATABASE_SSLMODE}
