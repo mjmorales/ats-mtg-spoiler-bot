@@ -20,10 +20,19 @@ func AppendCard(e *colly.HTMLElement) {
 	})
 }
 
-func ScrapeSpoilers() {
+func ScrapeSpoilers(dbConfig DBConfig) {
 	log.Println("Scraping spoilers...")
 
-	connStr := "postgres://postgres:password@0.0.0.0:7000/ats_mtg_spoiler_bot?sslmode=disable"
+	connStr := fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		dbConfig.DatabaseUser,
+		dbConfig.DatabasePassword,
+		dbConfig.DatabaseHost,
+		dbConfig.DatabasePort,
+		dbConfig.Database,
+		dbConfig.DatabaseSslmode,
+	)
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
@@ -73,4 +82,6 @@ func ScrapeSpoilers() {
 		log.Printf("Inserting card: %s", card.BaseUrl)
 		InsertCard(db, card)
 	}
+
+	log.Println("Finished scraping spoilers.")
 }

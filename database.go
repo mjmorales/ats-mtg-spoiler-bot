@@ -12,6 +12,15 @@ type Card struct {
 	ImageURL string
 }
 
+type DBConfig struct {
+	Database         string
+	DatabaseUser     string
+	DatabasePassword string
+	DatabaseHost     string
+	DatabasePort     string
+	DatabaseSslmode  string
+}
+
 func CheckCardExists(db *sql.DB, url string) bool {
 	var count int
 
