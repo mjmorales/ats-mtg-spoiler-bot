@@ -39,6 +39,8 @@ func ScrapeSpoilers(dbConfig DBConfig) {
 	}
 	defer db.Close()
 
+	InitializeDB(db)
+
 	spoilerBase := "https://mythicspoiler.com/"
 	spoilerURL := spoilerBase + "newspoilers.html"
 
