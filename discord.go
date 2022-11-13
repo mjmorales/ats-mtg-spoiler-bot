@@ -38,6 +38,11 @@ func NotifyNewSpoilers(config Config, cards []Card) {
 			},
 		}
 		embeds = append(embeds, embed)
+
+		// embeds are limited so we stop at 8 to avoid hitting that limit
+		if len(embeds) > 8 {
+			break
+		}
 	}
 
 	contentString := fmt.Sprintf("Found **%d** new spoilers :biting_lip:", len(cards))
