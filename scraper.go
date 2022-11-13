@@ -55,7 +55,7 @@ func ScrapeSpoilers(config Config, db *sql.DB) {
 
 	// Set error handler
 	c.OnError(func(r *colly.Response, err error) {
-		log.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+		log.Println("Request URL:", r.Request.URL, "failed with response:", r.StatusCode)
 	})
 
 	c.OnRequest(func(r *colly.Request) {
